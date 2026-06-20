@@ -14,6 +14,7 @@ const tagFiltersContainer = document.getElementById('tagFilters');
 const syncStatusBadge = document.getElementById('syncStatus');
 const emptyState = document.getElementById('emptyState');
 const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+const exportCsvBtn = document.getElementById('exportCsvBtn');
 
 // Modal Elements
 const tweetModal = document.getElementById('tweetModal');
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Setup Event Listeners
 function setupEventListeners() {
     refreshBtn.addEventListener('click', () => loadReleaseNotes(true));
+    exportCsvBtn.addEventListener('click', exportToCSV);
     
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.toLowerCase().trim();
@@ -229,18 +231,32 @@ function renderFeed() {
                         <line x1="10" y1="14" x2="21" y2="3"/>
                     </svg>
                 </a>
-                <button class="btn-card-tweet" data-id="${note.id}">
-                    <svg style="margin-right: 4px; vertical-align: middle;" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                    Tweet
-                </button>
+                <div class="card-actions">
+                    <button class="btn-card-copy" title="Panoya Kopyala">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span>Kopyala</span>
+                    </button>
+                    <button class="btn-card-tweet" data-id="${note.id}">
+                        <svg style="margin-right: 4px; vertical-align: middle;" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        Tweet
+                    </button>
+                </div>
             </div>
         `;
         
         // Add event listener to card tweet button
         card.querySelector('.btn-card-tweet').addEventListener('click', () => {
             openComposer(note);
+        });
+
+        // Add event listener to copy button
+        card.querySelector('.btn-card-copy').addEventListener('click', (e) => {
+            copyToClipboard(note, e.currentTarget);
         });
         
         notesFeed.appendChild(card);
@@ -366,4 +382,71 @@ function publishTweet() {
     
     // Close modal composer
     closeComposer();
+}
+
+// Copy single release note item to clipboard
+async function copyToClipboard(note, buttonEl) {
+    const copyText = `Google Cloud BigQuery Update [${note.type}] (${note.date}):\n"${note.content_text}"\n\nLink: ${note.link}`;
+    
+    try {
+        await navigator.clipboard.writeText(copyText);
+        
+        // Visual feedback
+        buttonEl.classList.add('copied');
+        const span = buttonEl.querySelector('span');
+        const originalText = span.innerText;
+        span.innerText = 'Kopyalandı!';
+        
+        // Revert feedback after 2 seconds
+        setTimeout(() => {
+            buttonEl.classList.remove('copied');
+            span.innerText = originalText;
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
+        alert('Kopyalama başarısız oldu.');
+    }
+}
+
+// Export currently filtered list to CSV format
+function exportToCSV() {
+    if (filteredNotes.length === 0) {
+        alert('Aktarılacak sürüm notu bulunamadı.');
+        return;
+    }
+    
+    // CSV Header row
+    const headers = ['Date', 'Type', 'Link', 'Description'];
+    const csvRows = [headers.join(',')];
+    
+    for (const note of filteredNotes) {
+        // Escape double quotes inside values by doubling them
+        const escapedDate = `"${note.date.replace(/"/g, '""')}"`;
+        const escapedType = `"${note.type.replace(/"/g, '""')}"`;
+        const escapedLink = `"${note.link.replace(/"/g, '""')}"`;
+        const escapedDesc = `"${note.content_text.replace(/"/g, '""')}"`;
+        
+        csvRows.push([escapedDate, escapedType, escapedLink, escapedDesc].join(','));
+    }
+    
+    // Create UTF-8 CSV with Byte Order Mark (BOM) to prevent Excel character encoding issues
+    const csvContent = '\uFEFF' + csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    // Dynamic filename based on date and category
+    const cleanDate = new Date().toISOString().split('T')[0];
+    const categoryName = activeCategory.toLowerCase();
+    const filename = `bigquery_release_notes_${categoryName}_${cleanDate}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }

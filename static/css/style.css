@@ -593,6 +593,46 @@ body {
     box-shadow: 0 4px 10px rgba(29, 155, 240, 0.35);
 }
 
+/* Card Action buttons layout */
+.card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Copy Button on Card */
+.btn-card-copy {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-card-copy:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-color-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.btn-card-copy:active {
+    transform: translateY(0);
+}
+
+.btn-card-copy.copied {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-feature);
+    color: var(--color-feature);
+}
+
 /* Skeleton Loading State Animations */
 .skeleton {
     pointer-events: none;
