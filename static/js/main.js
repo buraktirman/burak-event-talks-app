@@ -15,6 +15,7 @@ const syncStatusBadge = document.getElementById('syncStatus');
 const emptyState = document.getElementById('emptyState');
 const resetFiltersBtn = document.getElementById('resetFiltersBtn');
 const exportCsvBtn = document.getElementById('exportCsvBtn');
+const themeToggleBtn = document.getElementById('themeToggleBtn');
 
 // Modal Elements
 const tweetModal = document.getElementById('tweetModal');
@@ -31,6 +32,7 @@ const previewContent = document.getElementById('previewContent');
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     loadReleaseNotes(false);
     setupEventListeners();
 });
@@ -39,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     refreshBtn.addEventListener('click', () => loadReleaseNotes(true));
     exportCsvBtn.addEventListener('click', exportToCSV);
+    themeToggleBtn.addEventListener('click', toggleTheme);
     
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.toLowerCase().trim();
@@ -449,4 +452,37 @@ function exportToCSV() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+}
+
+// Initialize color theme
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        updateThemeIcons(true);
+    } else {
+        document.body.classList.remove('light-theme');
+        updateThemeIcons(false);
+    }
+}
+
+// Toggle color theme
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    updateThemeIcons(isLight);
+}
+
+// Update theme icons state
+function updateThemeIcons(isLight) {
+    const sunIcon = themeToggleBtn.querySelector('.sun-icon');
+    const moonIcon = themeToggleBtn.querySelector('.moon-icon');
+    
+    if (isLight) {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
 }

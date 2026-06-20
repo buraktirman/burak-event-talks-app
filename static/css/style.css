@@ -44,6 +44,139 @@
     --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Light Theme Variables Override */
+body.light-theme {
+    --bg-dark: #f1f3f7;
+    --bg-card: rgba(255, 255, 255, 0.75);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-color-hover: rgba(0, 0, 0, 0.16);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --primary-glow: rgba(139, 92, 246, 0.12);
+}
+
+/* Light Theme Sub-Element Styles */
+body.light-theme .bg-glow {
+    opacity: 0.07;
+}
+
+body.light-theme .modal-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .modal-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .tweet-composer-wrapper {
+    background: rgba(0, 0, 0, 0.015);
+}
+
+body.light-theme .tweet-composer-wrapper:focus-within {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+body.light-theme .composer-footer {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+body.light-theme .tweet-card-preview {
+    background: rgba(0, 0, 0, 0.015);
+}
+
+body.light-theme .modal-footer {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+body.light-theme .card-body code {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0f172a;
+}
+
+body.light-theme .card-body a {
+    color: #0284c7;
+    border-bottom-color: rgba(2, 132, 199, 0.4);
+}
+
+body.light-theme .card-body a:hover {
+    color: #0369a1;
+}
+
+body.light-theme .app-header h1 {
+    background: linear-gradient(to right, #0f172a, #334155);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .btn-secondary {
+    background: rgba(0, 0, 0, 0.03);
+    color: #334155;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .search-wrapper input {
+    background: rgba(0, 0, 0, 0.015);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .search-wrapper input:focus {
+    background: rgba(0, 0, 0, 0.025);
+    border-color: var(--accent-blue);
+}
+
+body.light-theme .tag-filter {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #475569;
+}
+
+body.light-theme .tag-filter:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #0f172a;
+}
+
+body.light-theme .tag-filter.active {
+    color: white;
+}
+
+body.light-theme .card-body strong {
+    color: #0f172a;
+}
+
+body.light-theme .card-origin-link:hover {
+    color: #0f172a;
+}
+
+body.light-theme .btn-card-copy {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #475569;
+}
+
+body.light-theme .btn-card-copy:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #0f172a;
+}
+
+/* Icon-Only Buttons */
+.btn-icon-only {
+    padding: 10px;
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
